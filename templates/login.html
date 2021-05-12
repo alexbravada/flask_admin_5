@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Пенни, вход здесь!</h1>
+
+{% if error_msg: %}
+
+    {{ error_msg }}
+
+{% endif %}
+
+<form action="/login/" method="post">
+	Имя: <input type="text" name="username" value="">
+    Пароль: <input type="password" name="password">
+    <button type="submit">Войти</button>
+    <form action="/logout/" method="post">
+    <button type="submit">Выйти</button>
+</form>
+
+
+
+</body>
+</html>
