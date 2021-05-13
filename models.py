@@ -1,9 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
 
+from werkzeug.security import generate_password_hash, check_password_hash
+
+# Настройки соединения сделаем позже в модуле приложения
+db = SQLAlchemy()
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-db = SQLAlchemy(app)
 # Описываем модель пользователя
 class User(db.Model):
     __tablename__ = 'users'
