@@ -1,8 +1,6 @@
-from flask import Flask, session, redirect, request, render_template
+from flask import session, redirect, request, render_template
 
-from app import app, db
-from models import User
-from forms import LoginForm, RegistrationForm, ChangePasswordForm
+from flask_admin_5w import app
 
 
 @app.route('/home/')
