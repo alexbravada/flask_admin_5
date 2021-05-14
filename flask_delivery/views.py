@@ -2,7 +2,7 @@ from flask import session, redirect, request, render_template
 
 from flask_delivery import app, User, db, Dish, Category, Order
 
-from forms import RegistrationForm
+from flask_delivery.forms import RegistrationForm
 
 from wtforms.validators import Required
 
@@ -25,7 +25,7 @@ def registration():
 
         return render_template("registration_success.html", form=form)
 
-    return render_template("registration.html", form=form)
+    return render_template("register.html", form=form)
 
 
 

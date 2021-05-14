@@ -21,7 +21,7 @@ class Dish(db.Model):
     __tablename__ = 'dishes'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(32), nullable=False, unique=True)
-    price = db.Column(db.Integer(32), nullable=False)
+    price = db.Column(db.Integer, nullable=False)
     description = db.Column(db.Text(512))
     picture = db.Column(db.String(512))
     category = db.Column(db.String(32)) # отношение с категориями
@@ -30,13 +30,13 @@ class Dish(db.Model):
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(32), nullable=False, unique=True)
-    meals = db.Column(db.Integer(32)) # отношение с Dish.category
+    meals = db.Column(db.Integer)  # отношение с Dish.category
 
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    total = db.Column(db.Integer(512), nullable=False, default=0)
+    total = db.Column(db.Integer, nullable=False, default=0)
     status = db.Column(db.String(32))
     mail = db.Column(db.String(120), nullable=False)
     phone = db.Column(db.String(120), nullable=False)
