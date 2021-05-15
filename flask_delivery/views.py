@@ -6,8 +6,30 @@ from flask_delivery.forms import RegistrationForm
 
 from wtforms.validators import Required
 
-@app.route("/registration/", methods=["GET", "POST"])
-def registration():
+
+@app.route('/')
+def main():
+
+    return render_template("main.html")
+
+
+@app.route('/cart/')
+def cart():
+    return render_template("cart.html")
+
+
+@app.route('/account/')
+def account():
+    return render_template("account.html")
+
+
+@app.route('/auth/')
+def auth():
+    return render_template("auth.html")
+
+
+@app.route("/register/", methods=["GET", "POST"])
+def register():
     if session.get("user_id"):
         return redirect("/")
 
@@ -23,15 +45,26 @@ def registration():
         db.session.add(user)
         db.session.commit()
 
-        return render_template("registration_success.html", form=form)
+        return render_template("login.html", form=form)
 
     return render_template("register.html", form=form)
 
 
+@app.route('/logout/', methods=["POST"])
+def logout():
+    error_msg = ""
+    if session.get("is_auth"):
+        session.pop("is_auth")
+    if not session.get("is_auth"):
+        error_msg = "Войдите в аккаунт"
+    return render_template("logout.html", error_msg=error_msg)
 
 
+@app.route('/ordered/', methods=["POST"])
+def ordered():
+    error_msg = ""
 
-
+    return render_template("ordered.html", error_msg=error_msg)
 
 
 

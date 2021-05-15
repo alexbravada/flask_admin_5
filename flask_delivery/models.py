@@ -1,6 +1,8 @@
 from datetime import datetime  # Под вопросом... !!!
 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -14,7 +16,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     mail = db.Column(db.String(32), nullable=False, unique=True)
     password = db.Column(db.String(32), nullable=False)
-    orders = db.Column(db.String(512))  # добавить отношение один к многим
+    orders = db.relationship("Order")   # добавить отношение один к многим
 
 
 class Dish(db.Model):
@@ -24,14 +26,14 @@ class Dish(db.Model):
     price = db.Column(db.Integer, nullable=False)
     description = db.Column(db.Text(512))
     picture = db.Column(db.String(512))
-    category = db.Column(db.String(32)) # отношение с категориями
-
+    category_id = db.relationship("Category.id")  # отношение с категориями
+    #category_id = db.Column(db.Integer, ForeignKey('Category.id'))
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(32), nullable=False, unique=True)
-    meals = db.Column(db.Integer)  # отношение с Dish.category
-
+    meals = db.Column(db.Integer, ForeignKey('Dish.id'))  # отношение с Dish.category
+    #meals = db.relationship("Dish")
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -42,4 +44,4 @@ class Order(db.Model):
     phone = db.Column(db.String(120), nullable=False)
     address = db.Column(db.String(512), nullable=False)
     order_list = db.Column(db.Text(512)) # (можно через запятую, можно many2many)
-
+    user_id = db.Column(db.Integer, ForeignKey('users.id'))
