@@ -1,16 +1,29 @@
 from flask import session, redirect, request, render_template
+from .app import app
+from .models import User, db, Dish, Category, Order
 
-from flask_delivery import app, User, db, Dish, Category, Order
-
-from flask_delivery.forms import RegistrationForm
+from .forms import RegistrationForm
 
 from wtforms.validators import Required
 
 
 @app.route('/')
 def main():
-
+    # dish = Dish.query.get(1)
+    # print(dish.category.title)
     return render_template("main.html")
+
+
+# Добавление продуктов в корзину
+@app.route('/addtocart/', methods=["GET", "POST"])
+def add_to_cart():
+    # Получаем либо значение из сессии, либо пустой список
+    title = request.form.get('dish_title')
+    cart = session.get("cart", [])
+    cart.append(db.session.query(Dish).filter_by(title=title))
+    session['cart'] = cart
+
+    return session['cart']
 
 
 @app.route('/cart/')

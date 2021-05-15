@@ -1,16 +1,17 @@
 from flask import Flask
 
-from flask_delivery.config import Config
-
-from flask_delivery.models import db, User, Dish, Category, Order
-
 from flask_migrate import Migrate
+
+from .config import Config
+
+from .models import db
+from .forms import csrf
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)  # Настраиваем соединение
-
-from flask_delivery.views import *
+csrf.init_app(app)
+from .views import *
 
 
 migrate = Migrate(app, db)

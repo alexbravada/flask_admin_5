@@ -12,28 +12,10 @@ db = SQLAlchemy()
 
 # Описываем модель пользователя
 class User(db.Model):
-    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     mail = db.Column(db.String(32), nullable=False, unique=True)
     password = db.Column(db.String(32), nullable=False)
     orders = db.relationship("Order")   # добавить отношение один к многим
-
-
-class Dish(db.Model):
-    __tablename__ = 'dishes'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(32), nullable=False, unique=True)
-    price = db.Column(db.Integer, nullable=False)
-    description = db.Column(db.Text(512))
-    picture = db.Column(db.String(512))
-    category_id = db.relationship("Category.id")  # отношение с категориями
-    #category_id = db.Column(db.Integer, ForeignKey('Category.id'))
-
-class Category(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(32), nullable=False, unique=True)
-    meals = db.Column(db.Integer, ForeignKey('Dish.id'))  # отношение с Dish.category
-    #meals = db.relationship("Dish")
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -44,4 +26,22 @@ class Order(db.Model):
     phone = db.Column(db.String(120), nullable=False)
     address = db.Column(db.String(512), nullable=False)
     order_list = db.Column(db.Text(512)) # (можно через запятую, можно many2many)
-    user_id = db.Column(db.Integer, ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, ForeignKey('user.id'))
+    userr = db.relationship("User")
+
+class Dish(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(32), nullable=False, unique=True)
+    price = db.Column(db.Integer, nullable=False)
+    description = db.Column(db.Text(512))
+    picture = db.Column(db.String(512))
+    category_id = db.Column(db.Integer, ForeignKey('category.id'))
+    category = db.relationship("Category")  # отношение с категориями
+    #category_id = db.Column(db.Integer, ForeignKey('Category.id'))
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(32), nullable=False, unique=True)
+    meals = db.relationship("Dish")  # отношение с Dish.category
+
+
