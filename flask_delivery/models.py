@@ -3,6 +3,7 @@ from datetime import datetime  # Под вопросом... !!!
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.expression import func
 
 from werkzeug.security import generate_password_hash, check_password_hash
 

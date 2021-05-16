@@ -1,6 +1,6 @@
 from flask import session, redirect, request, render_template
 from .app import app
-from .models import User, db, Dish, Category, Order
+from .models import User, db, Dish, Category, Order, func
 
 from .forms import RegistrationForm
 
@@ -9,9 +9,19 @@ from wtforms.validators import Required
 
 @app.route('/')
 def main():
-    # dish = Dish.query.get(1)
-    # print(dish.category.title)
-    return render_template("main.html")
+    #cat = Category.query.get(1)
+    sushi = db.session.query(Dish).filter_by(category_id=1).order_by(func.random()).limit(3).all()
+    print(sushi)
+    sushi_list = []
+    for i in sushi:
+        sushi_list.append(i.title)
+        print(i.title)
+    print(sushi_list)
+    # for i in cat.meals:
+    #     print(i.title)
+    #print(cat.meals.func.random().all())
+    #db.session.query(category).order_by(func.random()).limit(sample_num).all()
+    return render_template("main.html", sushi=sushi)
 
 
 # Добавление продуктов в корзину
