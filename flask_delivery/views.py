@@ -70,9 +70,7 @@ def register():
             db.session.commit()
 
             return render_template("reg_done.html", form=form, mail=user.mail, password=user.password)
-        if not form.validate_on_submit():
-            msg = "Введенные данные не удовлетворяют требованиям"
-            return render_template("register.html", form=form, msg=msg)
+
         else:
 
             return render_template("register.html", form=form)

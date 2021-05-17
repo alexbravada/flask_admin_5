@@ -20,12 +20,18 @@
           <div class="mt-5 form-label-group">{{ form.csrf_token }}
 
             <p class="text-muted">{{ form.mail.label }}</p>
+                  {% for err in form.mail.errors %}
+                  <p class="error">{{ err }}</p>
+                  {% endfor %}
                 {{ form.mail(class_="form-control") }}
           </div>
           <div class="mt-3 form-label-group">
                   <p class="text-muted">{{ form.password.label }}</p>
-            {{ form.password(class_="form-control") }}
-            {{ msg }}
+                  {% for err in form.password.errors %}
+                  <p class="error">{{ err }}</p>
+                    {% endfor %}
+                  {{ form.password(class_="form-control") }}
+                  {{ msg }}
 
           </div>{{ form.hidden_tag() }}
           <div class="checkbox mb-3"></div>
