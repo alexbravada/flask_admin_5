@@ -57,22 +57,25 @@ def register():
     if session.get("user_id"):
         return redirect("/")
     form = RegistrationForm()
-
+    user = User()
 
     if request.method == "POST":
+        if form.validate_on_submit():
+            user = User()
 
-        user = User()
+            user.mail = form.mail.data
+            user.password = form.password.data
 
-        user.mail = form.mail.data
-        user.password = form.password.data
+            db.session.add(user)
+            db.session.commit()
 
-        db.session.add(user)
-        db.session.commit()
+            return render_template("reg_done.html", form=form, mail=user.mail, password=user.password)
+        if not form.validate_on_submit():
+            msg = "Введенные данные не удовлетворяют требованиям"
+            return render_template("register.html", form=form, msg=msg)
+        else:
 
-        return render_template("reg_done.html", form=form, mail=user.mail, password=user.password)
-
-    else:
-        return render_template("register.html", form=form)
+            return render_template("register.html", form=form)
 
 # if form.mail.data in db.session.query(User).filter_by(mail=form.mail.data).all():
         #     return "User with that mail alredy registred"

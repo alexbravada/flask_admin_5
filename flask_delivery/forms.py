@@ -20,9 +20,10 @@ class LoginForm(FlaskForm):
 class RegistrationForm(FlaskForm):
 
     # Добавляем поле имени пользователя
-    mail = StringField("Электронная почта", [Email(), Length(min=5, max=6)])
+    mail = StringField("Электронная почта", [Email(message="Это не похоже на почту, попробуйте еще раз!"),
+                                             InputRequired(message="Введите что-нибудь")])
     # Добавляем поле пароля
-    password = PasswordField("Пароль", [Length(min=3)])
+    password = PasswordField("Пароль", [InputRequired(message="Введите что-нибудь"), Length(min=3, message="Слишком короткая строка")])
     # Добавляем поле подтверждения пароля
     confirm_password = PasswordField("повторите пароль")
 
