@@ -77,7 +77,7 @@ def register():
 
             return render_template("register.html", form=form)
 
-# if form.mail.data in db.session.query(User).filter_by(mail=form.mail.data).all():
+#  if form.mail.data in db.session.query(User).filter_by(mail=form.mail.data).all():
         #     return "User with that mail alredy registred"
 
 
