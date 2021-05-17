@@ -53,24 +53,52 @@ def auth():
 
 @app.route("/register/", methods=["GET", "POST"])
 def register():
+    msg = ""
     if session.get("user_id"):
         return redirect("/")
-
-    # Создаем форму
     form = RegistrationForm()
+
 
     if request.method == "POST":
 
-        # создаем пользователя
         user = User()
-        user.username = form.username.data
+
+        user.mail = form.mail.data
         user.password = form.password.data
+
         db.session.add(user)
         db.session.commit()
 
-        return render_template("login.html", form=form)
+        return render_template("reg_done.html", form=form, mail=user.mail, password=user.password)
 
-    return render_template("register.html", form=form)
+    else:
+        return render_template("register.html", form=form)
+
+# if form.mail.data in db.session.query(User).filter_by(mail=form.mail.data).all():
+        #     return "User with that mail alredy registred"
+
+
+
+# @app.route("/reg_done/", methods=["POST"])
+# def reg_done():
+#
+#     form = RegistrationForm()
+#     if request.method == "POST":
+#         #print(db.session.query(User).filter_by(mail=form.mail.data).first().all())
+#
+#         if form.mail.data not in db.session.query(User).filter_by(mail=form.mail.data).all():
+#             # получаем данные
+#             # создаем пользователя
+#             user = User()
+#             user.mail = form.mail.data
+#             user.password = form.password.data
+#             # zapis v bd
+#             db.session.add(user)
+#             db.session.commit()
+#             # выводим данные
+#             return "Получены данные {} и {}".format(user.mail, user.password)
+#         if form.mail.data in db.session.query(User).filter_by(mail=form.mail.data).all():
+#             return "Polzovatel uje zaregan"
 
 
 @app.route('/logout/', methods=["POST"])

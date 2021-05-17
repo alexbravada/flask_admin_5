@@ -4,7 +4,7 @@ import os
 # - Текущая папка
 current_path = os.path.dirname(os.path.realpath(__file__))
 # - Путь к файлу БД в данной папке
-db_path = "sqlite:///" + current_path + "\\flsk_deliver.db"
+db_path = "sqlite:///" + current_path + "/flsk_deliver.db"
 
 
 class Config:
