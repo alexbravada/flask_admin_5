@@ -2,7 +2,7 @@ from flask import session, redirect, request, render_template
 from .app import app
 from .models import User, db, Dish, Category, Order, func
 
-from .forms import RegistrationForm
+from .forms import RegistrationForm, AuthForm
 
 from wtforms.validators import Required
 
@@ -46,60 +46,55 @@ def account():
     return render_template("account.html")
 
 
-@app.route('/auth/')
+@app.route('/auth/', methods=['GET', 'POST'])
 def auth():
-    return render_template("auth.html")
+    msg_email = "mesaga test email"
+    msg = "test msg"
+    form = AuthForm()
+    if session.get("is_auth"):
+        return redirect("/account/")
+    if request.method == "POST" and User.query.filter(User.mail == form.mail.data, User.password == form.password.data).first():
+        return redirect('/account/')
+
+    return render_template("auth.html", form=form, msg_email=msg_email, msg=msg)
 
 
 @app.route("/register/", methods=["GET", "POST"])
 def register():
     msg = ""
-    if session.get("user_id"):
-        return redirect("/")
+    msg_email = ""
+    # if session.get("user_id"):
+    #     return redirect("/")
     form = RegistrationForm()
-    user = User()
-
-    if request.method == "POST":
-        if form.validate_on_submit():
-            user = User()
-
-            user.mail = form.mail.data
-            user.password = form.password.data
-
+    if request.method == "POST" and form.password.data == form.confirm_password.data:
+        if form.validate_on_submit() and not User.query.filter(User.mail == form.mail.data).first():
+            user = User(mail=form.mail.data, password=form.password.data)
+            print(user.mail)
+            print(user.password)
             db.session.add(user)
             db.session.commit()
-
+            #print(user.mail)
             return render_template("reg_done.html", form=form, mail=user.mail, password=user.password)
 
-        else:
+        form.mail.errors.append("Такой пользователь уже существует")
+        msg_email = "This email already registred"
+        return render_template("register.html", form=form, msg_email=msg_email)
+    else:
+        msg = "Password doesn't match, try again "
+        return render_template("register.html", form=form, msg=msg)
+        # if form.validate_on_submit():
+        #     user = User(mail=form.mail.data, password=form.password.data)
+        #     db.session.add(user)
+        #     db.session.commit()
+        #     print(form.mail.data)
+        #     return render_template("reg_done.html", form=form, mail=user.mail, password=user.password)
+        # else:
+        #     #msg = ('Invalid username or password')
+        #     return render_template("register.html", form=form)
 
-            return render_template("register.html", form=form)
-
-#  if form.mail.data in db.session.query(User).filter_by(mail=form.mail.data).all():
-        #     return "User with that mail alredy registred"
+    return render_template("register.html", form=form)
 
 
-
-# @app.route("/reg_done/", methods=["POST"])
-# def reg_done():
-#
-#     form = RegistrationForm()
-#     if request.method == "POST":
-#         #print(db.session.query(User).filter_by(mail=form.mail.data).first().all())
-#
-#         if form.mail.data not in db.session.query(User).filter_by(mail=form.mail.data).all():
-#             # получаем данные
-#             # создаем пользователя
-#             user = User()
-#             user.mail = form.mail.data
-#             user.password = form.password.data
-#             # zapis v bd
-#             db.session.add(user)
-#             db.session.commit()
-#             # выводим данные
-#             return "Получены данные {} и {}".format(user.mail, user.password)
-#         if form.mail.data in db.session.query(User).filter_by(mail=form.mail.data).all():
-#             return "Polzovatel uje zaregan"
 
 
 @app.route('/logout/', methods=["POST"])

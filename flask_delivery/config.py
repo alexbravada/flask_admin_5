@@ -13,3 +13,4 @@ class Config:
     SQLALCHEMY_DATABASE_URI = db_path
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     FLASK_APP = "flask_delivery"
+    # SQLALCHEMY_ECHO = True

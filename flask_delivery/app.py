@@ -22,6 +22,8 @@ SESSION_TYPE = 'memcache'
 app.config["USERNAME"] = "test"
 app.config["PASSWORD"] = "test"
 
+# app.config["SQLALCHEMY_ECHO"] = True
+
 
 if __name__ == "__main__":
     app.run(debug=True)
