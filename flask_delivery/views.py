@@ -43,7 +43,10 @@ def cart():
 
 @app.route('/account/')
 def account():
-    return render_template("account.html")
+    if session.get("is_auth"):
+        return render_template("account.html")
+
+    return redirect('/auth/')
 
 
 @app.route('/auth/', methods=['GET', 'POST'])
@@ -54,6 +57,8 @@ def auth():
     if session.get("is_auth"):
         return redirect("/account/")
     if request.method == "POST" and User.query.filter(User.mail == form.mail.data, User.password == form.password.data).first():
+        session["is_auth"] = True
+        print(session.get("is_auth"))
         return redirect('/account/')
 
     return render_template("auth.html", form=form, msg_email=msg_email, msg=msg)
@@ -73,7 +78,6 @@ def register():
             print(user.password)
             db.session.add(user)
             db.session.commit()
-            #print(user.mail)
             return render_template("reg_done.html", form=form, mail=user.mail, password=user.password)
 
         form.mail.errors.append("Такой пользователь уже существует")
@@ -97,14 +101,18 @@ def register():
 
 
 
-@app.route('/logout/', methods=["POST"])
+@app.route('/logout/', methods=["GET", "POST"])
 def logout():
     error_msg = ""
-    if session.get("is_auth"):
-        session.pop("is_auth")
+    if request.method == "GET" and session.get("is_auth"):
+        session["is_auth"] = False
+        return redirect('/')
     if not session.get("is_auth"):
         error_msg = "Войдите в аккаунт"
-    return render_template("logout.html", error_msg=error_msg)
+        print(error_msg)
+        return redirect('/auth/')
+
+    #return render_template("logout.html", error_msg=error_msg)
 
 
 @app.route('/ordered/', methods=["POST"])
